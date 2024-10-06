@@ -4,10 +4,10 @@ import PostForm from '../components/PostForm.vue';
 import ListPosts from '../components/ListPosts.vue';
 import { addFirebaseDoc } from '../utils/addFirebaseDoc';
 import { getFirebaseCollection } from '../utils/getFirebaseCollection';
+import { logout, suscribeToAuth } from '../services/auth';
 
 export default {
   name: "Home",
-  //TODO = > ESTA DATA DEBERIA RECUPERARSE DE FIREBASE PERO NO DEBERIA ESTAR EN ESTE COMPONENTE LA FUNCION 
   data() {
     return {
       loading: false,
@@ -23,10 +23,19 @@ export default {
       };
       await addFirebaseDoc('posts', post)
     },
+    handleLogout() {
+      logout()
+      this.$router.push({ name: 'login' });
+    }
   },
   mounted() {
-    this.loading = true
+    this.loading = true;
     getFirebaseCollection((posts) => { this.posts = posts; this.loading = false }, 'posts')
+
+    suscribeToAuth((userCredentials) => {
+      this.user.email = userCredentials.email;
+      this.user.id = userCredentials.id;
+    })
   }
 };
 </script>
@@ -37,8 +46,9 @@ export default {
       <Aside class="px-10 py-5  border-r-slate-800"></Aside>
       <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
         <div>
-          <div class="border-b-2 border-slate-800 p-5">
+          <div class="border-b-2 border-slate-800 p-5 flex items-center justify-between">
             <h2 class="text-xl font-medium">Home</h2>
+            <button v-if="user.id" @click="handleLogout" class="text-sm font-medium text-red-700">Cerrar sesion</button>
           </div>
           <PostForm @post-submit="handleNewPost" />
           <div>

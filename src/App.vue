@@ -1,6 +1,12 @@
 <script>
+
 export default {
   name: "App",
+  data() {
+    return {
+      authenticatedUser: { id: null, email: null }
+    }
+  },
 };
 </script>
 <template>
