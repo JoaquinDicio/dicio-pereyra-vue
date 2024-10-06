@@ -13,12 +13,3 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
-
-async function addPost(post) {
-  try {
-    const postsCollectionRef = collection(db, "posts");
-    await addDoc(postsCollectionRef, post);
-  } catch (e) {
-    console.error("Error agregando el documento: ", e);
-  }
-}
