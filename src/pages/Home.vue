@@ -2,28 +2,31 @@
 import Aside from '../components/Aside.vue';
 import PostForm from '../components/PostForm.vue';
 import ListPosts from '../components/ListPosts.vue';
-import addFirebaseDoc from '../utilities/addFirebaseDoc';
-import { Timestamp } from 'firebase/firestore';
+import { addFirebaseDoc } from '../utils/addFirebaseDoc';
+import { getFirebaseCollection } from '../utils/getFirebaseCollection';
 
 export default {
   name: "Home",
-  //TODO = > ESTA DATA DEBERIA RECUPERARSE DE FIREBASE PERO FALTA USER COLLECTION
+  //TODO = > ESTA DATA DEBERIA RECUPERARSE DE FIREBASE PERO NO DEBERIA ESTAR EN ESTE COMPONENTE LA FUNCION 
   data() {
     return {
+      loading: false,
+      posts: [],
       user: { nickname: 'theinoperant01', username: 'joacodicio', img: 'https://picsum.photos/200/200' },
     }
   },
   components: { Aside, PostForm, ListPosts },
   methods: {
-
     async handleNewPost(text) {
       const post = {
-        ...this.user,
-        text,
-        createdAt: Timestamp.now()
+        ...this.user, text,
       };
       await addFirebaseDoc('posts', post)
     },
+  },
+  mounted() {
+    this.loading = true
+    getFirebaseCollection((posts) => { this.posts = posts; this.loading = false }, 'posts')
   }
 };
 </script>
@@ -39,7 +42,10 @@ export default {
           </div>
           <PostForm @post-submit="handleNewPost" />
           <div>
-            <ListPosts />
+            <div v-if="loading" class="flex h-full items-center justify-center">
+              <p>Cargando los ultimos posts...</p>
+            </div>
+            <ListPosts :posts="posts" />
           </div>
         </div>
       </main>
