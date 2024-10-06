@@ -13,7 +13,7 @@ export default {
       <div class="mb-52">
         <h2 class="text-3xl max-w-[320px]">
           Bienvenid@ a
-          <h1 class="text-6xl font-bold">NotTwitter</h1>
+          <span class="text-6xl font-bold">NotTwitter</span>
         </h2>
         <p class="pt-4 text-slate-100">
           Enterate ahora sobre lo que está pasando en todo el mundo

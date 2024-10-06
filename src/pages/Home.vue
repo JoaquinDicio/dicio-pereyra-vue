@@ -16,7 +16,7 @@ export default {
   components: { Aside, PostForm, ListPosts },
   methods: {
 
-    async handleSubmit(text) {
+    async handleNewPost(text) {
       const post = { ...this.user, text }
       await addFirebaseDoc('posts', post)
     },
@@ -33,7 +33,7 @@ export default {
           <div class="border-b-2 border-slate-800 p-5">
             <h2 class="text-xl font-medium">Home</h2>
           </div>
-          <PostForm @post-submit="handleSubmit" />
+          <PostForm @post-submit="handleNewPost" />
           <div>
             <ListPosts />
           </div>
