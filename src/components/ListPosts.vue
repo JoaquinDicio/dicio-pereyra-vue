@@ -1,7 +1,7 @@
 <script>
 import Post from './Post.vue';
 import { db } from '../services/firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 
 export default {
     name: "ListPosts",
@@ -16,12 +16,13 @@ export default {
         async fetchPosts() {
             this.loading = true;
             const postsCollection = collection(db, "posts");
-            onSnapshot(postsCollection, (snapshot) => {
+            const postsQuery = query(postsCollection, orderBy("createdAt", "desc"));
+            onSnapshot(postsQuery, (snapshot) => {
                 this.posts = snapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
                 }));
-                this.loading = false
+                this.loading = false;
             });
         },
     },

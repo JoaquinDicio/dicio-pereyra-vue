@@ -3,7 +3,7 @@ import Aside from '../components/Aside.vue';
 import PostForm from '../components/PostForm.vue';
 import ListPosts from '../components/ListPosts.vue';
 import addFirebaseDoc from '../utilities/addFirebaseDoc';
-
+import { Timestamp } from 'firebase/firestore';
 
 export default {
   name: "Home",
@@ -17,7 +17,11 @@ export default {
   methods: {
 
     async handleNewPost(text) {
-      const post = { ...this.user, text }
+      const post = {
+        ...this.user,
+        text,
+        createdAt: Timestamp.now()
+      };
       await addFirebaseDoc('posts', post)
     },
   }
