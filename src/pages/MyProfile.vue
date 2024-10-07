@@ -38,7 +38,8 @@ export default {
 
             <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>
-                    <div class="border-b-2 border-slate-800 p-5 flex justify-end">
+                    <div class="border-b-2 border-slate-800 p-5 flex items-center justify-between">
+                        <h2 class="text-xl font-medium">Mi perfil</h2>
                         <button v-if="user.id" @click="handleLogout"
                             class="text-sm font-medium text-white bg-red-600 py-3 px-5 rounded ">Cerrar sesión</button>
                     </div>
