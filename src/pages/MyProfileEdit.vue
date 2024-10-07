@@ -20,11 +20,14 @@ export default {
             this.$router.push({ name: 'login' });
         },
         async handleSubmit(){
+            
+            //TODO: Habilitar la modificacion del email en firebase (Joaco) y probar si esto funciona cambiando el email en la edicion del perfil
+
             console.log(this.user)
             this.editing = true;
 
             try {
-                await editProfile({ username: this.user.username });
+                await editProfile({ username: this.user.username, email: this.user.email });
                 this.user.username = auth.currentUser.displayName;
             } catch (error) {
                 console.log(`[MyProfileEdit handleSubmit] Error al editar el perfil: ${error}`);
