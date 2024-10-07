@@ -3,8 +3,9 @@ import Login from "./pages/Login.vue";
 import Register from "./pages/Register.vue";
 import Welcome from "./pages/Welcome.vue";
 import Home from "./pages/Home.vue";
-import MyProfile from "./pages/MyProfile.vue";
 import { suscribeToAuth } from "./services/auth"; 
+import MyProfile from "./pages/MyProfile.vue";
+import MyProfileEdit from "./pages/MyProfileEdit.vue";
 
 let isAuthenticated = false; 
 
@@ -17,6 +18,7 @@ const routes = [
   { path: "/register", name: "register", component: Register },
   { path: "/login", name: "login", component: Login },
   { path: "/profile", name: "myprofile", component: MyProfile, meta: { requiresAuth: true } },
+  { path: "/profile-edit", name: "profile-edit", component: MyProfileEdit, meta: { requiresAuth: true } },
   { path: "/home", name: "home", component: Home, meta: { requiresAuth: true } },
 ];
 
