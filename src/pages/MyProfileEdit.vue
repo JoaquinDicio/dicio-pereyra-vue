@@ -47,7 +47,7 @@ export default {
             this.user.email = userCredentials.email;
             this.user.id = userCredentials.id;
             this.user.username = userCredentials.username;
-            this.user.biography = '' || 'No hay una biografia!'
+            this.user.biography = userCredentials.biography || 'No hay una biografia!'
         })
 
         this.loading = false;
