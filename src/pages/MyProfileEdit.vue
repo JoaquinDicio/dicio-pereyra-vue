@@ -11,7 +11,7 @@ export default {
     data() {
         return {
             editing: false,
-            user: { email: '', username: '', img: 'https://picsum.photos/200/200' },
+            user: { email: '', username: '', img: 'https://picsum.photos/200/200', biography: ''},
         };
     },
     methods : {
@@ -19,22 +19,25 @@ export default {
             logout()
             this.$router.push({ name: 'login' });
         },
-        async handleSubmit(){
-            
-            //TODO: Habilitar la modificacion del email en firebase (Joaco) y probar si esto funciona cambiando el email en la edicion del perfil
+        async handleSubmit() {
+        if (this.editing) return; // Evita múltiples envíos
+        this.editing = true;
 
+        try {
             console.log(this.user)
-            this.editing = true;
-
-            try {
-                await editProfile({ username: this.user.username, email: this.user.email });
-                this.user.username = auth.currentUser.displayName;
-            } catch (error) {
-                console.log(`[MyProfileEdit handleSubmit] Error al editar el perfil: ${error}`);
-            }
-
+            await editProfile({
+                username: this.user.username,
+                email: this.user.email,
+                biography: this.user.biography
+            });
+            this.user.username = auth.currentUser.displayName;
+        } catch (error) {
+            console.error(`[MyProfileEdit handleSubmit] Error al editar el perfil: ${error}`);
+        } finally {
             this.editing = false;
-        },
+        }
+    },
+
     }
     ,
     mounted() {
@@ -44,6 +47,7 @@ export default {
             this.user.email = userCredentials.email;
             this.user.id = userCredentials.id;
             this.user.username = userCredentials.username;
+            this.user.biography = '' || 'No hay una biografia!'
         })
 
         this.loading = false;
@@ -69,8 +73,10 @@ export default {
                         <form action="#" @submit.prevent="handleSubmit" class="flex flex-col">
                             <label for="Nombre" class=" my-3">Nombre:</label>
                             <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.username">
-                            <label for="Nombre" class=" my-3">Email:</label>
+                            <label for="Email" class=" my-3">Email:</label>
                             <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.email">
+                            <label for="Biography" class=" my-3">Biografia:</label>
+                            <textarea rows="6" cols="50" class="text-slate-950 p-2 rounded-lg" v-model="user.biography"></textarea>
                             <button type="submit" class=" bg-green-500 py-2 rounded-lg mt-7">Actualizar</button>
                         </form>
                     </div>

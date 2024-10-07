@@ -11,7 +11,7 @@ export default {
     data() {
         return {
             loading: false,
-            user: { email: '', username: '', img: 'https://picsum.photos/200/200' },
+            user: { email: '', username: '', img: 'https://picsum.photos/200/200', biography: ''},
         };
     },
     methods : {
@@ -27,6 +27,7 @@ export default {
             this.user.email = userCredentials.email;
             this.user.id = userCredentials.id;
             this.user.username = userCredentials.username;
+            this.user.biography = userCredentials.biography || 'No hay una biografía!';
         })
 
         this.loading = false;
@@ -60,6 +61,7 @@ export default {
                                 <div>
                                     <p class="text-2xl font-semibold">{{ user.username }}</p>
                                     <p class="text-lg">{{ user.email }}</p>
+                                    <p class="text-sm">{{ user.biography }}</p>
                                 </div>
                                 <div>
                                     <router-link to="profile-edit">Editar</router-link>

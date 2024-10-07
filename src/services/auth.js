@@ -27,6 +27,7 @@ onAuthStateChanged(auth, async (user) => {
         userCredentials.id = user.uid;
         userCredentials.email = user.email;
         userCredentials.username = docSnapshot.data().username; 
+        userCredentials.biography = docSnapshot.data().biography;
       } else {
         console.log("No hay datos del usuario en Firestore");
       }
@@ -37,6 +38,8 @@ onAuthStateChanged(auth, async (user) => {
     userCredentials.id = null;
     userCredentials.email = null;
     userCredentials.username = null;
+    userCredentials.biography = null;
+
     notifyAll();
   }
 });
@@ -70,7 +73,7 @@ export async function logout() {
   return signOut(auth);
 }
 
-export async function editProfile({ username, email }) {
+export async function editProfile({ username, email, biography  }) {
   try {
     await updateProfile(auth.currentUser, {
       displayName: username,
@@ -82,7 +85,8 @@ export async function editProfile({ username, email }) {
 
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       username: username,
-      email: email
+      email: email,
+      biography: biography
     });
 
     router.push({ name: 'myprofile' });
