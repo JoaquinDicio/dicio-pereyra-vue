@@ -31,7 +31,6 @@ export default {
   mounted() {
     this.loading = true;
 
-    // Obtener los posts desde Firestore
     getFirebaseCollection((posts) => {
       this.posts = posts;
       this.loading = false
@@ -40,7 +39,7 @@ export default {
     suscribeToAuth((userCredentials) => {
       this.user.email = userCredentials.email;
       this.user.id = userCredentials.id;
-      this.user.username = userCredentials.username; // Asegúrate de que esto esté asignado
+      this.user.username = userCredentials.username;
 
       console.log("Usuario autenticado:", this.user);
     })
@@ -51,18 +50,22 @@ export default {
 <template>
   <section class="bg-[var(--bg-color)]">
     <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
-      <Aside class="px-10 py-5 border-r-slate-800"></Aside>
+
+      <Aside :username="user.username" :email="user.email" class="px-10 py-5 border-r-slate-800"></Aside>
+
       <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
         <div>
           <div class="border-b-2 border-slate-800 p-5 flex items-center justify-between">
             <h2 class="text-xl font-medium">Home</h2>
-            <button v-if="user.id" @click="handleLogout" class="text-sm font-medium text-red-700">Cerrar sesión</button>
+            <button v-if="user.id" @click="handleLogout"
+              class="text-sm font-medium text-white bg-red-600 py-3 px-5 rounded ">Cerrar sesión</button>
           </div>
           <div class="p-5">
-            <!-- Mostrar el nombre de usuario aquí -->
             <p class="text-lg">Bienvenido, <strong>{{ user.username }}</strong></p>
           </div>
+
           <PostForm @post-submit="handleNewPost" />
+
           <div>
             <div v-if="loading" class="flex h-full items-center justify-center">
               <p>Cargando los últimos posts...</p>
@@ -71,6 +74,7 @@ export default {
           </div>
         </div>
       </main>
+
     </div>
   </section>
 </template>

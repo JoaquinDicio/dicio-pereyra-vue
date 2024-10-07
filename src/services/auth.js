@@ -1,10 +1,11 @@
 import {
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { getDoc, doc } from "firebase/firestore";
-import { auth, db } from "./firebase"; // Asegúrate de importar db también
+import { getDoc, doc, setDoc } from "firebase/firestore";
+import { auth, db } from "./firebase";
 
 const userCredentials = {
   id: null,
@@ -37,7 +38,23 @@ export async function login({ email, password }) {
   try {
     return await signInWithEmailAndPassword(auth, email, password);
   } catch (e) {
-    console.log("password o email invalidos");
+    console.log("Credenciales invalidas");
+  }
+}
+export async function registerUser(email, password, username) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userId = userCredential.user.uid;
+
+    await setDoc(doc(db, "users", userId), {
+      username: username,
+      email: email,
+    });
+
+    return userCredential.user;
+  } catch (error) {
+    console.log("No se ha podido registrar un nuevo usuario");
+    throw error;
   }
 }
 

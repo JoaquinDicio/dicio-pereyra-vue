@@ -18,7 +18,6 @@ export default {
           this.$router.push({ name: 'home' });
         }
       } catch (e) {
-        console.log(e)
         this.error = true
       }
     },
@@ -45,13 +44,13 @@ export default {
           </div>
           <div>
             <div class="flex items-center justify-between">
-              <label for="password" class="block text-sm font-medium leading-6">Password</label>
+              <label for="password" class="block text-sm font-medium leading-6">Contraseña</label>
             </div>
             <div class="mt-2">
               <input v-model="credentials.password" id="password" name="password" type="password" required
                 class="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             </div>
-            <p v-if="error" class="text-red-500 text-sm">Credenciales no validas</p>
+            <p v-if="error" class="text-red-500 text-sm mt-5">Credenciales no validas</p>
           </div>
           <div>
             <button type="submit"

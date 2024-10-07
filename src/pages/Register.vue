@@ -2,19 +2,22 @@
 import { auth, db } from "../services/firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
+import { registerUser } from "../services/auth.js";
+import { getAuthErrorMessage } from "../services/authErrorService.js"
 
 export default {
   name: "Register",
   data() {
     return {
       credentials: {
+        loading: false,
         email: '',
         password: '',
-        username: '', // Agregar el campo de nombre de usuario
+        username: '',
         emailError: '',
         passwordError: '',
-        usernameError: '', // Agregar error para el nombre de usuario
-        createdUser: ''
+        usernameError: '',
+        createdUser: '',
       },
     };
   },
@@ -43,41 +46,18 @@ export default {
       if (!this.credentials.username) {
         this.credentials.usernameError = 'El nombre de usuario es obligatorio';
         return;
-      } else {
-        this.credentials.usernameError = '';
       }
-
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, this.credentials.email, this.credentials.password);
-
-        const userId = userCredential.user.uid;
-
-        await setDoc(doc(db, "users", userId), {
-          username: this.credentials.username,
-          email: this.credentials.email
-        });
-
-        this.credentials.createdUser = 'Usuario creado correctamente';
-        console.log('Usuario creado correctamente');
+        await registerUser(this.credentials.email, this.credentials.password, this.credentials.username);
+        this.$router.push({ name: 'login' });
       } catch (error) {
-        const errorCode = error.code;
-        if (errorCode === 'auth/email-already-in-use') {
-          this.credentials.emailError = 'El correo ya está en uso';
-        } else if (errorCode === 'auth/invalid-email') {
-          this.credentials.emailError = 'El correo electrónico no es válido';
-        } else if (errorCode === 'auth/weak-password') {
-          this.credentials.passwordError = 'La contraseña debe tener al menos 6 caracteres';
-        } else if (errorCode === 'auth/missing-password') {
-          this.credentials.passwordError = 'Por favor ingrese una contraseña';
-        } else {
-          this.credentials.emailError = 'Error al crear el usuario: ' + error.message;
-        }
+        const errorMessages = getAuthErrorMessage(error.code);
+        this.credentials = { ...this.credentials, ...errorMessages };
       }
     }
   }
 };
 </script>
-
 
 <template>
   <main class="text-white bg-[#11212d] pt-18">
@@ -106,7 +86,6 @@ export default {
               v-model="credentials.password">
             <p v-if="credentials.passwordError" class="text-red-500 mt-2">{{ credentials.passwordError }}</p>
           </div>
-          <p v-if="this.credentials.createdUser" class="text-green-500 my-2">{{ this.credentials.createdUser }}</p>
           <button type="submit"
             class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrarse</button>
         </form>

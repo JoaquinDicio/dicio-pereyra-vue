@@ -1,6 +1,16 @@
 <script>
 export default {
-    name: "Aside"
+    name: "Aside",
+    props: {
+        username: {
+            type: String,
+            required: true,
+        },
+        email: {
+            type: String,
+            required: true,
+        }
+    }
 }
 </script>
 
@@ -31,12 +41,12 @@ export default {
                 Postear +
             </button>
         </div>
-        <a href="" class="flex items-center gap-3">
+        <router-link to="profile" class="flex items-center gap-3">
             <img class="rounded-full w-[45px]" src="https://picsum.photos/200/200" alt="foto de perfil" />
             <div>
-                <p class="font-medium">nickname</p>
-                <p class="font-ligther">@username</p>
+                <p class="font-medium">{{ username }}</p>
+                <p class="font-ligther">@{{ email }}</p>
             </div>
-        </a>
+        </router-link>
     </aside>
 </template>
