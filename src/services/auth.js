@@ -3,7 +3,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth } from "./firebase";
+import { getDoc, doc } from "firebase/firestore";
+import { auth, db } from "./firebase"; // Asegúrate de importar db también
 
 const userCredentials = {
   id: null,
@@ -12,13 +13,21 @@ const userCredentials = {
 
 let callbacks = [];
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (user) {
     userCredentials.id = user.uid;
     userCredentials.email = user.email;
+
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+      userCredentials.username = userDoc.data().username; 
+    } else {
+      console.log("No hay datos del usuario en Firestore");
+    }
   } else {
     userCredentials.id = null;
     userCredentials.email = null;
+    userCredentials.username = null; 
   }
 
   notifyAll();

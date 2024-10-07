@@ -12,7 +12,7 @@ export default {
     return {
       loading: false,
       posts: [],
-      user: { nickname: 'theinoperant01', username: 'joacodicio', img: 'https://picsum.photos/200/200' },
+      user: { email: '', username: '', img: 'https://picsum.photos/200/200' },
     }
   },
   components: { Aside, PostForm, ListPosts },
@@ -30,11 +30,19 @@ export default {
   },
   mounted() {
     this.loading = true;
-    getFirebaseCollection((posts) => { this.posts = posts; this.loading = false }, 'posts')
+
+    // Obtener los posts desde Firestore
+    getFirebaseCollection((posts) => {
+      this.posts = posts;
+      this.loading = false
+    }, 'posts')
 
     suscribeToAuth((userCredentials) => {
       this.user.email = userCredentials.email;
       this.user.id = userCredentials.id;
+      this.user.username = userCredentials.username; // Asegúrate de que esto esté asignado
+
+      console.log("Usuario autenticado:", this.user);
     })
   }
 };
@@ -43,17 +51,21 @@ export default {
 <template>
   <section class="bg-[var(--bg-color)]">
     <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
-      <Aside class="px-10 py-5  border-r-slate-800"></Aside>
+      <Aside class="px-10 py-5 border-r-slate-800"></Aside>
       <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
         <div>
           <div class="border-b-2 border-slate-800 p-5 flex items-center justify-between">
             <h2 class="text-xl font-medium">Home</h2>
-            <button v-if="user.id" @click="handleLogout" class="text-sm font-medium text-red-700">Cerrar sesion</button>
+            <button v-if="user.id" @click="handleLogout" class="text-sm font-medium text-red-700">Cerrar sesión</button>
+          </div>
+          <div class="p-5">
+            <!-- Mostrar el nombre de usuario aquí -->
+            <p class="text-lg">Bienvenido, <strong>{{ user.username }}</strong></p>
           </div>
           <PostForm @post-submit="handleNewPost" />
           <div>
             <div v-if="loading" class="flex h-full items-center justify-center">
-              <p>Cargando los ultimos posts...</p>
+              <p>Cargando los últimos posts...</p>
             </div>
             <ListPosts :posts="posts" />
           </div>
