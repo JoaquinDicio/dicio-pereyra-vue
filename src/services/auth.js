@@ -3,9 +3,6 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  updateEmail,
-  updateProfile,
-  sendEmailVerification,
 } from "firebase/auth";
 import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "./firebase";

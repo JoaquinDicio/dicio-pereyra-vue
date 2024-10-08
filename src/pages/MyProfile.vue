@@ -11,23 +11,20 @@ export default {
     data() {
         return {
             loading: false,
-            user: { email: '', username: '', img: 'https://picsum.photos/200/200', biography: ''},
+            user: { img: 'https://picsum.photos/200/200' },
         };
     },
-    methods : {
+    methods: {
         handleLogout() {
             logout()
-            this.$router.push({ name: 'login' });
         }
     },
     mounted() {
         this.loading = true;
 
         suscribeToAuth((userCredentials) => {
-            this.user.email = userCredentials.email;
-            this.user.id = userCredentials.id;
-            this.user.username = userCredentials.username;
-            this.user.biography = userCredentials.biography || 'No hay una biografía!';
+            if (!userCredentials.biography) userCredentials.biography = 'No hay una biografia';
+            this.user = { ...userCredentials, ...this.user }
         })
 
         this.loading = false;

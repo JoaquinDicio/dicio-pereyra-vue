@@ -1,6 +1,7 @@
 import { updateProfile, updateEmail } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
+import router from "../router";
 
 export async function editProfile({ username, email, biography }) {
   try {
@@ -16,9 +17,9 @@ export async function editProfile({ username, email, biography }) {
       biography: biography,
     });
 
-    this.$router.push({ name: "myprofile" });
+    router.push({ name: "myprofile" });
   } catch (error) {
-    console.log(`[Profile.js editProfile] Error al editar el perfil: ${error}`);
+    console.log(error);
 
     if (error.code === "auth/requires-recent-login") {
       console.log(

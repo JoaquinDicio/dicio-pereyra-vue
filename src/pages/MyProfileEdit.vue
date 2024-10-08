@@ -12,6 +12,7 @@ export default {
     data() {
         return {
             editing: false,
+            loading: false,
             user: { email: '', username: '', img: 'https://picsum.photos/200/200', biography: '' },
         };
     },
@@ -34,10 +35,9 @@ export default {
                 });
 
             } catch (error) {
-                console.error(`[MyProfileEdit handleSubmit] Error al editar el perfil: ${error}`);
+                console.error(error);
             } finally {
                 this.editing = false;
-                this.$router.push('profile')
             }
         },
 
