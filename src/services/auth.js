@@ -92,38 +92,8 @@ function getAuthErrorMessage(errorCode) {
 }
 
 export async function logout() {
-  return signOut(auth);
-}
-
-export async function editProfile({ username, email, biography }) {
-  try {
-    await updateProfile(auth.currentUser, {
-      displayName: username,
-    });
-
-    await updateEmail(auth.currentUser, email);
-
-    await sendEmailVerification(auth.currentUser);
-
-    await setDoc(doc(db, "users", auth.currentUser.uid), {
-      username: username,
-      email: email,
-      biography: biography,
-    });
-
-    router.push({ name: "myprofile" });
-    console.log(
-      "Perfil editado con éxito. Verifica tu nuevo correo electrónico."
-    );
-  } catch (error) {
-    console.log(`[Auth.js editProfile] Error al editar el perfil: ${error}`);
-
-    if (error.code === "auth/requires-recent-login") {
-      console.log(
-        "El usuario necesita re-autenticarse para realizar esta operación."
-      );
-    }
-  }
+  await signOut(auth);
+  router.push({ name: "login" });
 }
 
 export function suscribeToAuth(callback) {

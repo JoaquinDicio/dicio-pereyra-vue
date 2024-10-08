@@ -45,7 +45,7 @@ export default {
             <img class="rounded-full w-[45px]" src="https://picsum.photos/200/200" alt="foto de perfil" />
             <div>
                 <p class="font-medium">{{ username }}</p>
-                <p class="font-ligther">@{{ email }}</p>
+                <p class="font-ligther text-xs">@{{ email }}</p>
             </div>
         </router-link>
     </aside>

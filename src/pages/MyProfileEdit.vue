@@ -1,8 +1,9 @@
 <script>
 import { suscribeToAuth } from '../services/auth.js'
 import Aside from '../components/Aside.vue';
-import { logout, editProfile } from '../services/auth';
-import { auth } from "../services/firebase.js";
+import { logout } from '../services/auth';
+import { editProfile } from '../services/profile.js';
+
 export default {
     name: "MyProfileEdit",
     components: {
@@ -11,32 +12,34 @@ export default {
     data() {
         return {
             editing: false,
-            user: { email: '', username: '', img: 'https://picsum.photos/200/200', biography: ''},
+            user: { email: '', username: '', img: 'https://picsum.photos/200/200', biography: '' },
         };
     },
-    methods : {
+    methods: {
         handleLogout() {
             logout()
-            this.$router.push({ name: 'login' });
         },
         async handleSubmit() {
-        if (this.editing) return; // Evita múltiples envíos
-        this.editing = true;
+            if (this.editing) return;
 
-        try {
-            console.log(this.user)
-            await editProfile({
-                username: this.user.username,
-                email: this.user.email,
-                biography: this.user.biography
-            });
-            this.user.username = auth.currentUser.displayName;
-        } catch (error) {
-            console.error(`[MyProfileEdit handleSubmit] Error al editar el perfil: ${error}`);
-        } finally {
-            this.editing = false;
-        }
-    },
+            this.editing = true;
+
+            try {
+                const { username, email, biography } = this.user
+
+                await editProfile({
+                    username,
+                    email,
+                    biography,
+                });
+
+            } catch (error) {
+                console.error(`[MyProfileEdit handleSubmit] Error al editar el perfil: ${error}`);
+            } finally {
+                this.editing = false;
+                this.$router.push('profile')
+            }
+        },
 
     }
     ,
@@ -69,21 +72,24 @@ export default {
                         <button v-if="user.id" @click="handleLogout"
                             class="text-sm font-medium text-white bg-red-600 py-3 px-5 rounded ">Cerrar sesión</button>
                     </div>
-                    <div class="flex flex-col items-start mb-8 px-10 py-10">
+                    <div v-if="!loading" class="flex flex-col items-start mb-8 px-10 py-10">
                         <form action="#" @submit.prevent="handleSubmit" class="flex flex-col">
                             <label for="Nombre" class=" my-3">Nombre:</label>
                             <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.username">
                             <label for="Email" class=" my-3">Email:</label>
                             <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.email">
                             <label for="Biography" class=" my-3">Biografia:</label>
-                            <textarea rows="6" cols="50" class="text-slate-950 p-2 rounded-lg" v-model="user.biography"></textarea>
-                            <button type="submit" class=" bg-green-500 py-2 rounded-lg mt-7">Actualizar</button>
+                            <textarea rows="6" cols="50" class="text-slate-950 p-2 rounded-lg"
+                                v-model="user.biography"></textarea>
+                            <button type="submit" class=" bg-green-500 py-2 rounded-lg mt-7">{{ editing ?
+                                'Actualizando...' : 'Actualizar' }}</button>
                         </form>
+                    </div>
+                    <div v-else>
+                        <i>Cargando...</i>
                     </div>
                 </div>
             </main>
         </div>
     </section>
 </template>
-
-
