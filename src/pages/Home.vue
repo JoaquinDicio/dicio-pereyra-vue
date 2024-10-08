@@ -18,9 +18,11 @@ export default {
   components: { Aside, PostForm, ListPosts },
   methods: {
     async handleNewPost(text) {
+      const { username, img, id } = this.user;
       const post = {
-        ...this.user, text,
+        username, img, userId: id, text,
       };
+
       await addFirebaseDoc('posts', post)
     },
     handleLogout() {

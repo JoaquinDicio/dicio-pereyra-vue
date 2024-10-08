@@ -17,7 +17,7 @@ export async function editProfile({ username, email, biography }) {
       biography: biography,
     });
 
-    router.push({ name: "myprofile" });
+    router.push({ name: "MyProfile" });
   } catch (error) {
     console.log(error);
 

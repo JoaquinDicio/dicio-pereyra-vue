@@ -2,16 +2,20 @@
 import { suscribeToAuth } from '../services/auth.js'
 import Aside from '../components/Aside.vue';
 import { logout } from '../services/auth';
+import { getFirebaseCollection } from '../utils/getFirebaseCollection.js';
+import ListPosts from '../components/ListPosts.vue';
 
 export default {
-    name: "myprofile",
+    name: "MyProfile",
     components: {
-        Aside
+        Aside,
+        ListPosts
     },
     data() {
         return {
             loading: false,
             user: { img: 'https://picsum.photos/200/200' },
+            posts: []
         };
     },
     methods: {
@@ -26,6 +30,11 @@ export default {
             if (!userCredentials.biography) userCredentials.biography = 'No hay una biografia';
             this.user = { ...userCredentials, ...this.user }
         })
+
+        const filter = { field: 'userId', operator: '==', value: this.user.id }
+        getFirebaseCollection((posts) => {
+            this.posts = posts
+        }, 'posts', filter)
 
         this.loading = false;
     },
@@ -64,6 +73,9 @@ export default {
                                     <router-link to="profile-edit">Editar</router-link>
                                 </div>
                             </div>
+                        </div>
+                        <div class="w-full">
+                            <ListPosts :posts="posts" />
                         </div>
                     </div>
                 </div>
