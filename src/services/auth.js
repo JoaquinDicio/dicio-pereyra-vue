@@ -75,20 +75,21 @@ export async function registerUser(email, password, username) {
   }
 }
 
+//esta funcion devuelve mensajes en español basandose en codigo de error otorgado por firebase
 function getAuthErrorMessage(errorCode) {
   switch (errorCode) {
     case "auth/email-already-in-use":
-      return { emailError: "El correo ya está en uso" };
+      return { email: "El correo ya está en uso" };
     case "auth/invalid-email":
-      return { emailError: "El correo electrónico no es válido" };
+      return { email: "El correo electrónico no es válido" };
     case "auth/weak-password":
       return {
-        passwordError: "La contraseña debe tener al menos 6 caracteres",
+        password: "La contraseña debe tener al menos 6 caracteres",
       };
     case "auth/missing-password":
-      return { passwordError: "Por favor ingrese una contraseña" };
+      return { password: "Por favor ingrese una contraseña" };
     default:
-      return { emailError: "Error al crear el usuario: " + errorCode };
+      return { email: "Error al crear el usuario: " + errorCode };
   }
 }
 
