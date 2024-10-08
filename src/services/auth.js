@@ -5,9 +5,9 @@ import {
   signOut,
   updateEmail,
   updateProfile,
-  sendEmailVerification
+  sendEmailVerification,
 } from "firebase/auth";
-import { getDoc, doc, setDoc, onSnapshot } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import router from "../router";
 
@@ -26,7 +26,7 @@ onAuthStateChanged(auth, async (user) => {
       if (docSnapshot.exists()) {
         userCredentials.id = user.uid;
         userCredentials.email = user.email;
-        userCredentials.username = docSnapshot.data().username; 
+        userCredentials.username = docSnapshot.data().username;
         userCredentials.biography = docSnapshot.data().biography;
       } else {
         console.log("No hay datos del usuario en Firestore");
@@ -54,7 +54,12 @@ export async function login({ email, password }) {
 
 export async function registerUser(email, password, username) {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
     const userId = userCredential.user.uid;
 
     await setDoc(doc(db, "users", userId), {
@@ -64,8 +69,26 @@ export async function registerUser(email, password, username) {
 
     return userCredential.user;
   } catch (error) {
-    console.log("No se ha podido registrar un nuevo usuario");
-    throw error;
+    //se 'arroja' los errores para que puedan ser atajados haciendo uso de una funcion para mensajes
+    const message = getAuthErrorMessage(error.code);
+    throw message;
+  }
+}
+
+function getAuthErrorMessage(errorCode) {
+  switch (errorCode) {
+    case "auth/email-already-in-use":
+      return { emailError: "El correo ya está en uso" };
+    case "auth/invalid-email":
+      return { emailError: "El correo electrónico no es válido" };
+    case "auth/weak-password":
+      return {
+        passwordError: "La contraseña debe tener al menos 6 caracteres",
+      };
+    case "auth/missing-password":
+      return { passwordError: "Por favor ingrese una contraseña" };
+    default:
+      return { emailError: "Error al crear el usuario: " + errorCode };
   }
 }
 
@@ -73,7 +96,7 @@ export async function logout() {
   return signOut(auth);
 }
 
-export async function editProfile({ username, email, biography  }) {
+export async function editProfile({ username, email, biography }) {
   try {
     await updateProfile(auth.currentUser, {
       displayName: username,
@@ -86,19 +109,24 @@ export async function editProfile({ username, email, biography  }) {
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       username: username,
       email: email,
-      biography: biography
+      biography: biography,
     });
 
-    router.push({ name: 'myprofile' });
-    console.log('Perfil editado con éxito. Verifica tu nuevo correo electrónico.');
+    router.push({ name: "myprofile" });
+    console.log(
+      "Perfil editado con éxito. Verifica tu nuevo correo electrónico."
+    );
   } catch (error) {
     console.log(`[Auth.js editProfile] Error al editar el perfil: ${error}`);
-    
-    if (error.code === 'auth/requires-recent-login') {
-      console.log('El usuario necesita re-autenticarse para realizar esta operación.');
+
+    if (error.code === "auth/requires-recent-login") {
+      console.log(
+        "El usuario necesita re-autenticarse para realizar esta operación."
+      );
     }
   }
 }
+
 export function suscribeToAuth(callback) {
   callbacks.push(callback);
   notify(callback);

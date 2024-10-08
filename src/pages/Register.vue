@@ -1,9 +1,5 @@
 <script>
-import { auth, db } from "../services/firebase.js";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
 import { registerUser } from "../services/auth.js";
-import { getAuthErrorMessage } from "../services/authErrorService.js"
 
 export default {
   name: "Register",
@@ -43,15 +39,13 @@ export default {
 
   methods: {
     async createUser() {
-      if (!this.credentials.username) {
-        this.credentials.usernameError = 'El nombre de usuario es obligatorio';
-        return;
-      }
+      let { email, password, username } = this.credentials;
+
       try {
-        await registerUser(this.credentials.email, this.credentials.password, this.credentials.username);
+        if (!username) throw ({ usernameError: 'El nombre de usuario es obligatorio' })
+        await registerUser(email, password, username);
         this.$router.push({ name: 'login' });
-      } catch (error) {
-        const errorMessages = getAuthErrorMessage(error.code);
+      } catch (errorMessages) {
         this.credentials = { ...this.credentials, ...errorMessages };
       }
     }
