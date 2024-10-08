@@ -54,20 +54,18 @@ export async function login({ email, password }) {
 
 export async function registerUser(email, password, username) {
   try {
-    const userCredential = await createUserWithEmailAndPassword(
+    const { user } = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
 
-    const userId = userCredential.user.uid;
-
-    await setDoc(doc(db, "users", userId), {
+    await setDoc(doc(db, "users", user.uid), {
       username: username,
-      email: email,
+      password: password,
     });
 
-    return userCredential.user;
+    return user;
   } catch (error) {
     //se 'arroja' los errores para que puedan ser atajados haciendo uso de una funcion para mensajes
     const message = getAuthErrorMessage(error.code);
