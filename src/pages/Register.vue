@@ -20,7 +20,7 @@ export default {
 
       try {
         if (!username) throw ({ username: 'El nombre de usuario es obligatorio' })
-        await registerUser(email, password, username);
+        await registerUser(email, password, username, 'https://picsum.photos/200/200');
         this.$router.push({ name: 'login' });
       } catch (errorMessages) {
         this.errors = { ...errorMessages }
