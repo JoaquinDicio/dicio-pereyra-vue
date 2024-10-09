@@ -2,9 +2,10 @@
 import Aside from '../components/Aside.vue';
 import PostForm from '../components/PostForm.vue';
 import ListPosts from '../components/ListPosts.vue';
+import { auth } from '../services/firebase.js'
 import { addFirebaseDoc } from '../utils/addFirebaseDoc';
-import { getFirebaseCollection } from '../utils/getFirebaseCollection';
 import { logout, suscribeToAuth } from '../services/auth';
+import { getPosts } from '../utils/getPosts.js';
 
 export default {
   name: "Home",
@@ -12,15 +13,14 @@ export default {
     return {
       loading: false,
       posts: [],
-      user: { img: 'https://picsum.photos/200/200' },
+      user: {},
     }
   },
   components: { Aside, PostForm, ListPosts },
   methods: {
     async handleNewPost(text) {
-      const { username, img, id } = this.user;
       const post = {
-        username, img, userId: id, text,
+        userId: auth.currentUser.uid, text
       };
 
       await addFirebaseDoc('posts', post)
@@ -32,10 +32,7 @@ export default {
   mounted() {
     this.loading = true;
 
-    getFirebaseCollection((posts) => {
-      this.posts = posts;
-      this.loading = false
-    }, 'posts')
+    getPosts((posts) => { this.posts = posts; this.loading = false })
 
     suscribeToAuth((userCredentials) => {
       this.user = { ...userCredentials, ...this.user }

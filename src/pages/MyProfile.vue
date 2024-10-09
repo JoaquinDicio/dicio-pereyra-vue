@@ -1,11 +1,10 @@
 <script>
-import { suscribeToAuth } from '../services/auth.js'
 import Aside from '../components/Aside.vue';
 import { logout } from '../services/auth';
-import { getFirebaseCollection } from '../utils/getFirebaseCollection.js';
 import ListPosts from '../components/ListPosts.vue';
 import { getUserById } from '../services/profile.js';
 import { auth } from '../services/firebase.js';
+import { getPosts } from '../utils/getPosts.js';
 
 export default {
     name: "MyProfile",
@@ -38,9 +37,10 @@ export default {
 
         //esto trae los posts del user 
         const postFilter = { field: 'userId', operator: '==', value: userId }
-        getFirebaseCollection((posts) => {
+
+        getPosts((posts) => {
             this.posts = posts
-        }, 'posts', postFilter)
+        }, postFilter)
 
         this.loading = false;
     },
