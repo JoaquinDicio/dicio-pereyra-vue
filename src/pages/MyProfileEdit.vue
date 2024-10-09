@@ -13,7 +13,7 @@ export default {
         return {
             editing: false,
             loading: false,
-            user: { email: '', username: '', img: 'https://picsum.photos/200/200', biography: '' },
+            user: {},
         };
     },
     methods: {
@@ -26,12 +26,13 @@ export default {
             this.editing = true;
 
             try {
-                const { username, email, biography } = this.user
+                const { username, email, biography, img } = this.user
 
                 await editProfile({
                     username,
                     email,
                     biography,
+                    img
                 });
 
             } catch (error) {
@@ -47,10 +48,8 @@ export default {
         this.loading = true;
 
         suscribeToAuth((userCredentials) => {
-            this.user.email = userCredentials.email;
-            this.user.id = userCredentials.id;
-            this.user.username = userCredentials.username;
-            this.user.biography = userCredentials.biography || 'No hay una biografia!'
+            if (!userCredentials.biography) userCredentials.biography = 'No hay biografia!'
+            this.user = userCredentials
         })
 
         this.loading = false;
@@ -63,7 +62,7 @@ export default {
     <section class="bg-[var(--bg-color)]">
         <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
 
-            <Aside :username="user.username" :email="user.email" class="px-10 py-5 border-r-slate-800"></Aside>
+            <Aside class="px-10 py-5 border-r-slate-800"></Aside>
 
             <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>
@@ -74,6 +73,8 @@ export default {
                     </div>
                     <div v-if="!loading" class="flex flex-col items-start mb-8 px-10 py-10">
                         <form action="#" @submit.prevent="handleSubmit" class="flex flex-col">
+                            <label for="Fotito" class=" my-3">Foto:</label>
+                            <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.img">
                             <label for="Nombre" class=" my-3">Nombre:</label>
                             <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.username">
                             <label for="Email" class=" my-3">Email:</label>

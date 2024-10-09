@@ -5,8 +5,8 @@ export default {
   name: "Register",
   data() {
     return {
+      loading: false,
       credentials: {
-        loading: false,
         email: '',
         password: '',
         username: '',
@@ -19,12 +19,15 @@ export default {
       let { email, password, username } = this.credentials;
 
       try {
+        this.loading = true;
         if (!username) throw ({ username: 'El nombre de usuario es obligatorio' })
         await registerUser(email, password, username, 'https://picsum.photos/200/200');
         this.$router.push({ name: 'login' });
       } catch (errorMessages) {
         this.errors = { ...errorMessages }
         console.log(this.errors)
+      } finally {
+        this.loading = false;
       }
     }
   }
@@ -59,7 +62,8 @@ export default {
             <p v-if="errors.password" class="text-red-500 mt-2">{{ errors.password }}</p>
           </div>
           <button type="submit"
-            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registrarse</button>
+            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{{ loading
+              ? "Cargando..." : "Registrarse"}}</button>
         </form>
         <p class="mt-10 text-center text-sm text-gray-500">
           Ya tienes una cuenta?

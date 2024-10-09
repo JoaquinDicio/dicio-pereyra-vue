@@ -25,6 +25,7 @@ onAuthStateChanged(auth, async (user) => {
         userCredentials.email = user.email;
         userCredentials.username = docSnapshot.data().username;
         userCredentials.biography = docSnapshot.data().biography;
+        userCredentials.img = docSnapshot.data().img;
       } else {
         console.log("No hay datos del usuario en Firestore");
       }
@@ -35,6 +36,7 @@ onAuthStateChanged(auth, async (user) => {
     userCredentials.id = null;
     userCredentials.email = null;
     userCredentials.username = null;
+    userCredentials.biography = null;
     userCredentials.biography = null;
 
     notifyAll();
@@ -58,8 +60,9 @@ export async function registerUser(email, password, username, img) {
     );
 
     await setDoc(doc(db, "users", user.uid), {
-      username: username,
-      password: password,
+      username,
+      email,
+      img,
     });
 
     return user;

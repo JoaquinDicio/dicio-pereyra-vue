@@ -1,15 +1,22 @@
 <script>
+import { suscribeToAuth } from '../services/auth';
+
 export default {
     name: "Aside",
-    props: {
-        username: {
-            type: String,
-            required: true,
-        },
-        email: {
-            type: String,
-            required: true,
+    data() {
+        return {
+            user: {}
         }
+    },
+    mounted() {
+
+        suscribeToAuth((userCredentials) => {
+            const { email, id, img, username } = userCredentials
+            this.user.email = email;
+            this.user.id = id;
+            this.user.img = img
+            this.user.username = username;
+        })
     }
 }
 </script>
@@ -41,11 +48,11 @@ export default {
                 Postear +
             </button>
         </div>
-        <router-link to="profile" class="flex items-center gap-3">
-            <img class="rounded-full w-[45px]" src="https://picsum.photos/200/200" alt="foto de perfil" />
+        <router-link :to="`/profile/${user.id}`" class="flex items-center gap-3">
+            <img class="rounded-full w-[45px]" :src="user.img" alt="foto de perfil" />
             <div>
-                <p class="font-medium">{{ username }}</p>
-                <p class="font-ligther text-xs">@{{ email }}</p>
+                <p class="font-medium">{{ user.username }}</p>
+                <p class="font-ligther text-xs">@{{ user.email }}</p>
             </div>
         </router-link>
     </aside>

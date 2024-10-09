@@ -4,6 +4,8 @@ import Aside from '../components/Aside.vue';
 import { logout } from '../services/auth';
 import { getFirebaseCollection } from '../utils/getFirebaseCollection.js';
 import ListPosts from '../components/ListPosts.vue';
+import { getUserById } from '../services/profile.js';
+import { auth } from '../services/firebase.js';
 
 export default {
     name: "MyProfile",
@@ -14,8 +16,9 @@ export default {
     data() {
         return {
             loading: false,
-            user: { img: 'https://picsum.photos/200/200' },
-            posts: []
+            isMyProfile: false,
+            user: {},
+            posts: [],
         };
     },
     methods: {
@@ -25,16 +28,19 @@ export default {
     },
     mounted() {
         this.loading = true;
+        const userId = this.$route.params.id
 
-        suscribeToAuth((userCredentials) => {
-            if (!userCredentials.biography) userCredentials.biography = 'No hay una biografia';
-            this.user = { ...userCredentials, ...this.user }
+        getUserById(userId, (userData) => {
+            this.user = userData
         })
 
-        const filter = { field: 'userId', operator: '==', value: this.user.id }
+        if (userId == auth.currentUser.uid) this.isMyProfile = true;
+
+        //esto trae los posts del user 
+        const postFilter = { field: 'userId', operator: '==', value: userId }
         getFirebaseCollection((posts) => {
             this.posts = posts
-        }, 'posts', filter)
+        }, 'posts', postFilter)
 
         this.loading = false;
     },
@@ -46,7 +52,7 @@ export default {
     <section class="bg-[var(--bg-color)]">
         <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
 
-            <Aside :username="user.username" :email="user.email" class="px-10 py-5 border-r-slate-800"></Aside>
+            <Aside class="px-10 py-5 border-r-slate-800"></Aside>
 
             <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>
@@ -70,7 +76,7 @@ export default {
                                     <p class="text-sm">{{ user.biography }}</p>
                                 </div>
                                 <div>
-                                    <router-link to="profile-edit">Editar</router-link>
+                                    <router-link :to="{ name: 'profile-edit' }" v-if="isMyProfile">Editar</router-link>
                                 </div>
                             </div>
                         </div>
