@@ -27,7 +27,7 @@ export async function getPosts(callback, filter) {
       snapshot.docs.map(async (doc) => {
         const { text, userId } = doc.data();
         const { username, img } = await getUserById(userId);
-        return { text, userId, username, img, id: doc.id, comments: []};
+        return { text, userId, username, img, id: doc.id};
       })
     );
     console.log(queryResults)

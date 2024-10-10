@@ -1,23 +1,20 @@
 <script>
 import Aside from '../components/Aside.vue';
-import PostForm from '../components/PostForm.vue';
 import { auth } from '../services/firebase.js';
-import { addFirebaseDoc } from '../utils/addFirebaseDoc';
 import { logout, suscribeToAuth } from '../services/auth';
-import { getPosts, getPostById, addCommentToPost } from '../utils/getPosts.js';
-
+import { getPostById, addCommentToPost } from '../utils/getPosts.js';
+import CommentsList from '../components/CommentsList.vue'
 export default {
     name: "Home",
     data() {
         return {
             loading: false,
             post: null,
-            posts: [],
             user: {},
             commentText: '',
         };
     },
-    components: { Aside, PostForm },
+    components: { Aside, CommentsList },
     methods: {
         handleLogout() {
             logout();
@@ -27,7 +24,6 @@ export default {
             this.loading = true;
             try {
                 this.post = await getPostById(postId);
-                console.log(this.post);
             } catch (error) {
                 console.error("Error al obtener el post:", error.message);
             } finally {
@@ -40,10 +36,11 @@ export default {
             const newComment = {
                 text: commentText,
                 userId: auth.currentUser.uid,
-                createdAt: new Date()
+                createdAt: new Date(),
             };
 
             await addCommentToPost(postId, newComment);
+            this.commentText = '';
         }
     },
     mounted() {
@@ -86,11 +83,12 @@ export default {
                                 class="p-5 bg-transparent w-full" placeholder="¡Escribe un comentario!"></textarea>
                             <div class="pb-2 flex items-center">
                                 <input type="submit"
-                                    class=" hover:bg-indigo-800 cursor-pointer transition  w-full px-4 py-2 bg-indigo-900"
+                                    class="hover:bg-indigo-800 cursor-pointer transition w-full px-4 py-2 bg-indigo-900"
                                     value="Publicar">
                             </div>
                         </form>
 
+                        <CommentsList :comments="post.comments" />
                     </div>
                 </div>
             </main>
