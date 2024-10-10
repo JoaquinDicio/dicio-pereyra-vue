@@ -56,16 +56,16 @@ export async function getPostById(postId) {
     const postDoc = await getDoc(postDocRef);
 
     if (postDoc.exists()) {
-      const { text, userId, comments } = postDoc.data(); // Incluye comments aquí
+      const { text, userId, comments } = postDoc.data();
       const { username, img } = await getUserById(userId);
-
+      
       return { text, userId, username, img, id: postDoc.id, comments: comments || [] };
     } else {
       throw new Error("No se encontró el post con el ID especificado.");
     }
   } catch (error) {
     console.error("Error obteniendo el post:", error.message);
-    return null; // Retornar null en caso de error
+    return null;
   }
 }
 
