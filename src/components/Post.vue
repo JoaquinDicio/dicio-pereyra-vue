@@ -1,7 +1,7 @@
 <script>
 export default {
     name: "Post",
-    props: ['username', 'img', 'text', 'userId']
+    props: ['username', 'img', 'text', 'userId', 'postId']
 }
 </script>
 
@@ -11,6 +11,7 @@ export default {
         <div>
             <router-link :to="`/profile/${userId}`" class="font-medium">{{ username }}</router-link>
             <p>{{ text }}</p>
+            <router-link :to="`/${userId}/${postId}`" class="font-medium">Comentarios</router-link>
         </div>
     </div>
 </template>

@@ -7,6 +7,8 @@ import {
   doc,
   getDoc,
   where,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 
 export async function getPosts(callback, filter) {
@@ -25,14 +27,13 @@ export async function getPosts(callback, filter) {
       snapshot.docs.map(async (doc) => {
         const { text, userId } = doc.data();
         const { username, img } = await getUserById(userId);
-        return { text, userId, username, img };
+        return { text, userId, username, img, id: doc.id, comments: []};
       })
     );
-
+    console.log(queryResults)
     callback(queryResults);
   });
 }
-
 export async function getUserById(userId) {
   try {
     const docRef = doc(db, "users", userId);
@@ -46,5 +47,38 @@ export async function getUserById(userId) {
     }
   } catch (error) {
     console.log("Error obteniendo el usuario::", error);
+  }
+}
+
+export async function getPostById(postId) {
+  try {
+    const postDocRef = doc(db, "posts", postId);
+    const postDoc = await getDoc(postDocRef);
+
+    if (postDoc.exists()) {
+      const { text, userId, comments } = postDoc.data(); // Incluye comments aquí
+      const { username, img } = await getUserById(userId);
+
+      return { text, userId, username, img, id: postDoc.id, comments: comments || [] };
+    } else {
+      throw new Error("No se encontró el post con el ID especificado.");
+    }
+  } catch (error) {
+    console.error("Error obteniendo el post:", error.message);
+    return null; // Retornar null en caso de error
+  }
+}
+
+export async function addCommentToPost(postId, comment) {
+  try {
+    const postDocRef = doc(db, "posts", postId);
+    
+    await updateDoc(postDocRef, {
+      comments: arrayUnion(comment)
+    });
+
+    console.log("Comentario agregado exitosamente.");
+  } catch (error) {
+    console.error("Error al agregar comentario:", error.message);
   }
 }

@@ -20,7 +20,7 @@ export default {
   methods: {
     async handleNewPost(text) {
       const post = {
-        userId: auth.currentUser.uid, text
+        userId: auth.currentUser.uid, text,
       };
 
       await addFirebaseDoc('posts', post)

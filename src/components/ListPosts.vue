@@ -11,7 +11,7 @@ export default {
 <template>
     <ul>
         <li v-for="post in posts">
-            <Post :userId="post.userId" :img="post.img" :text="post.text" :username="post.username" />
+            <Post :userId="post.userId" :img="post.img" :text="post.text" :username="post.username" :postId="post.id" />
         </li>
     </ul>
 </template>

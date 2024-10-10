@@ -6,6 +6,7 @@ import Home from "./pages/Home.vue";
 import { suscribeToAuth } from "./services/auth";
 import MyProfile from "./pages/MyProfile.vue";
 import MyProfileEdit from "./pages/MyProfileEdit.vue";
+import PostComments from "./pages/PostComments.vue";
 
 let isAuthenticated = false;
 
@@ -28,6 +29,12 @@ const routes = [
     name: "Profile",
     component: MyProfile,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/:userid/:postid",
+    name: "post-comment",
+    component: PostComments,
+    meta: { requiresAuth: false },
   },
   {
     path: "/profile-edit",
