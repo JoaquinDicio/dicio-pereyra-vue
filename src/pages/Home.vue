@@ -2,10 +2,10 @@
 import Aside from '../components/Aside.vue';
 import PostForm from '../components/PostForm.vue';
 import ListPosts from '../components/ListPosts.vue';
-import { auth } from '../services/firebase.js'
 import { addFirebaseDoc } from '../utils/addFirebaseDoc';
-import { logout, suscribeToAuth } from '../services/auth';
-import { getPosts } from '../utils/getPosts.js';
+import { suscribeToAuth } from '../services/auth';
+import { getFirebaseCollection } from '../utils/getFirebaseCollection.js';
+import SectionHeader from '../components/SectionHeader.vue';
 
 export default {
   name: "Home",
@@ -16,27 +16,26 @@ export default {
       user: {},
     }
   },
-  components: { Aside, PostForm, ListPosts },
+  components: { Aside, PostForm, ListPosts, SectionHeader },
   methods: {
     async handleNewPost(text) {
-      const post = {
-        userId: auth.currentUser.uid, text,
-      };
 
+      const { username, id, img } = this.user
+      const post = { text, userImg: img, username, userId: id }
       await addFirebaseDoc('posts', post)
-    },
-    handleLogout() {
-      logout()
+
     }
   },
   mounted() {
     this.loading = true;
 
-    getPosts((posts) => { this.posts = posts; this.loading = false })
+    getFirebaseCollection((posts) => this.posts = posts, 'posts')
 
     suscribeToAuth((userCredentials) => {
-      this.user = { ...userCredentials, ...this.user }
+      this.user = { ...userCredentials }
     })
+
+    this.loading = false;
   }
 };
 </script>
@@ -46,12 +45,8 @@ export default {
     <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
       <Aside class="px-10 py-5 border-r-slate-800"></Aside>
       <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
+        <SectionHeader :sectionName="'Home'" />
         <div>
-          <div class="border-b-2 border-slate-800 p-5 flex items-center justify-between">
-            <h2 class="text-xl font-medium">Home</h2>
-            <button v-if="user.id" @click="handleLogout"
-              class="text-sm font-medium text-white bg-red-600 py-3 px-5 rounded ">Cerrar sesión</button>
-          </div>
           <div class="p-5">
             <p class="text-lg">Bienvenido, <strong>{{ user.username }}</strong></p>
           </div>

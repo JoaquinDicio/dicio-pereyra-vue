@@ -4,14 +4,17 @@ import { logout } from '../services/auth';
 import ListPosts from '../components/ListPosts.vue';
 import { getUserById } from '../services/profile.js';
 import { auth } from '../services/firebase.js';
-import { getPosts } from '../utils/getPosts.js';
+import { getFirebaseCollection } from '../utils/getFirebaseCollection.js';
+import SectionHeader from '../components/SectionHeader.vue';
 
 export default {
     name: "MyProfile",
     components: {
         Aside,
-        ListPosts
+        ListPosts,
+        SectionHeader
     },
+
     data() {
         return {
             loading: false,
@@ -20,29 +23,22 @@ export default {
             posts: [],
         };
     },
-    methods: {
-        handleLogout() {
-            logout()
-        }
-    },
     mounted() {
-        this.loading = true;
-        const userId = this.$route.params.id
-
-        getUserById(userId, (userData) => {
-            this.user = userData
-        })
-
+        const { userId } = this.$route.params
         if (userId == auth.currentUser.uid) this.isMyProfile = true;
 
-        //esto trae los posts del user 
-        const postFilter = { field: 'userId', operator: '==', value: userId }
+        try {
+            this.loading = true;
+            getUserById(userId, userData => this.user = { ...userData })
+            //este filtro es para traer los posts del user 
+            const filter = { field: 'userId', operator: '==', value: userId }
+            getFirebaseCollection((posts) => this.posts = posts, 'posts', filter)
+        } catch (e) {
+            console.log('Error cargando el perfil del usuario:', e)
+        } finally {
+            this.loading = false;
+        }
 
-        getPosts((posts) => {
-            this.posts = posts
-        }, postFilter)
-
-        this.loading = false;
     },
 
 };
@@ -56,11 +52,7 @@ export default {
 
             <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>
-                    <div class="border-b-2 border-slate-800 p-5 flex items-center justify-between">
-                        <h2 class="text-xl font-medium">Mi perfil</h2>
-                        <button v-if="user.id" @click="handleLogout"
-                            class="text-sm font-medium text-white bg-red-600 py-3 px-5 rounded ">Cerrar sesión</button>
-                    </div>
+                    <SectionHeader :sectionName="'Perfil'" />
                     <div class="flex flex-col items-start mb-8 px-10 py-10">
                         <div class=" rounded-md bg-red-300">
                             <img class="rounded-md w-full"

@@ -19,19 +19,13 @@ const routes = [
   { path: "/register", name: "register", component: Register },
   { path: "/login", name: "login", component: Login },
   {
-    path: "/profile",
-    name: "MyProfile",
-    component: MyProfile,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/profile/:id",
+    path: "/profile/:userId",
     name: "Profile",
     component: MyProfile,
     meta: { requiresAuth: true },
   },
   {
-    path: "/:userid/:postid",
+    path: "/:postId",
     name: "post-comment",
     component: PostComments,
     meta: { requiresAuth: false },

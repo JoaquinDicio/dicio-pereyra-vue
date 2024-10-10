@@ -1,9 +1,7 @@
 <script>
 import Aside from '../components/Aside.vue';
-import { auth } from '../services/firebase.js';
-import { logout, suscribeToAuth } from '../services/auth';
-import { getPostById, addCommentToPost } from '../utils/getPosts.js';
-import CommentsList from '../components/CommentsList.vue'
+import { logout } from '../services/auth';
+
 export default {
     name: "Home",
     data() {
@@ -14,38 +12,18 @@ export default {
             commentText: '',
         };
     },
-    components: { Aside, CommentsList },
+    components: { Aside },
     methods: {
         handleLogout() {
             logout();
         },
-        async getPost() {
-            const postId = this.$route.params.postid;
-            this.loading = true;
-
-            getPostById(postId, (post) => {
-                this.post = post;
-                this.loading = false;
-            });
-        },
         async submitComment(commentText) {
-            const postId = this.$route.params.postid;
-
-            const newComment = {
-                text: commentText,
-                userId: auth.currentUser.uid,
-                createdAt: new Date(),
-            };
-
-            await addCommentToPost(postId, newComment);
-            this.commentText = '';
         }
     },
     mounted() {
-        suscribeToAuth((userCredentials) => {
-            this.user = { ...userCredentials, ...this.user };
-        });
-        this.getPost();
+        const { postId } = this.$route.params
+
+        getPostById(postId)
     }
 };
 </script>
@@ -66,29 +44,16 @@ export default {
                         <p>Cargando post...</p>
                     </div>
 
-                    <div v-if="!loading && post" class="p-5">
-                        <div class="w-full border-b-2 px-5 p-7 border-slate-800 flex gap-3">
-                            <img :src="post.img" :alt="post.username" class="rounded-full w-[45px] h-[45px]">
-                            <div>
-                                <router-link :to="`/profile/${post.userId}`" class="font-medium">{{ post.username
-                                    }}</router-link>
-                                <p>{{ post.text }}</p>
-                            </div>
+                    <form @submit.prevent="submitComment(commentText)">
+                        <textarea v-model="commentText" name="text" id="text" rows="3"
+                            class="p-5 bg-transparent w-full resize-none"
+                            placeholder="¡Escribe un comentario!"></textarea>
+                        <div class="pb-2 flex items-center">
+                            <input type="submit"
+                                class="hover:bg-indigo-800 cursor-pointer transition w-full px-4 py-2 bg-indigo-900"
+                                value="Publicar">
                         </div>
-
-                        <form @submit.prevent="submitComment(commentText)">
-                            <textarea v-model="commentText" name="text" id="text" rows="3"
-                                class="p-5 bg-transparent w-full resize-none"
-                                placeholder="¡Escribe un comentario!"></textarea>
-                            <div class="pb-2 flex items-center">
-                                <input type="submit"
-                                    class="hover:bg-indigo-800 cursor-pointer transition w-full px-4 py-2 bg-indigo-900"
-                                    value="Publicar">
-                            </div>
-                        </form>
-
-                        <CommentsList :comments="this.post.comments" />
-                    </div>
+                    </form>
                 </div>
             </main>
         </div>

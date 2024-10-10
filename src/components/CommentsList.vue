@@ -1,5 +1,5 @@
 <script>
-import { getUserById } from '../utils/getPosts.js';
+import { getUserById } from '../services/posts.js';
 import CommentItem from './CommentItem.vue'; // Importa el nuevo componente
 
 export default {
@@ -40,7 +40,7 @@ export default {
             <p>No hay comentarios todavía.</p>
         </div>
         <div v-for="(comment, index) in commentsWithUsernames" :key="index">
-            <CommentItem :comment="comment" /> <!-- Uso del componente CommentItem -->
+            <CommentItem :comment="comment" />
         </div>
     </div>
 </template>

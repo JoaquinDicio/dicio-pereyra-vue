@@ -1,13 +1,14 @@
 <script>
 import { suscribeToAuth } from '../services/auth.js'
 import Aside from '../components/Aside.vue';
-import { logout } from '../services/auth';
 import { editProfile } from '../services/profile.js';
+import SectionHeader from '../components/SectionHeader.vue';
 
 export default {
     name: "MyProfileEdit",
     components: {
-        Aside
+        Aside,
+        SectionHeader
     },
     data() {
         return {
@@ -17,9 +18,6 @@ export default {
         };
     },
     methods: {
-        handleLogout() {
-            logout()
-        },
         async handleSubmit() {
             if (this.editing) return;
 
@@ -54,7 +52,6 @@ export default {
 
         this.loading = false;
     }
-
 };
 </script>
 
@@ -66,11 +63,7 @@ export default {
 
             <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>
-                    <div class="border-b-2 border-slate-800 p-5 flex items-center justify-between">
-                        <h2 class="text-xl font-medium">Editar mi perfil</h2>
-                        <button v-if="user.id" @click="handleLogout"
-                            class="text-sm font-medium text-white bg-red-600 py-3 px-5 rounded ">Cerrar sesión</button>
-                    </div>
+                    <SectionHeader :sectionName="'Editar perfil'" />
                     <div v-if="!loading" class="flex flex-col items-start mb-8 px-10 py-10">
                         <form action="#" @submit.prevent="handleSubmit" class="flex flex-col">
                             <label for="Fotito" class=" my-3">Foto:</label>
