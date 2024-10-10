@@ -1,10 +1,8 @@
 <script>
 import Aside from '../components/Aside.vue';
-import { logout } from '../services/auth';
 import ListPosts from '../components/ListPosts.vue';
-import { getUserById } from '../services/profile.js';
+import { getUserProfile } from '../services/profile.js';
 import { auth } from '../services/firebase.js';
-import { getFirebaseCollection } from '../utils/getFirebaseCollection.js';
 import SectionHeader from '../components/SectionHeader.vue';
 
 export default {
@@ -29,18 +27,13 @@ export default {
 
         try {
             this.loading = true;
-            getUserById(userId, userData => this.user = { ...userData })
-            //este filtro es para traer los posts del user 
-            const filter = { field: 'userId', operator: '==', value: userId }
-            getFirebaseCollection((posts) => this.posts = posts, 'posts', filter)
+            getUserProfile(userId, data => { this.user = data.user; this.posts = data.posts })
         } catch (e) {
             console.log('Error cargando el perfil del usuario:', e)
         } finally {
             this.loading = false;
         }
-
     },
-
 };
 </script>
 

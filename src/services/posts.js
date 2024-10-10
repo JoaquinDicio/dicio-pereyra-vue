@@ -1,18 +1,21 @@
 import { db } from "./firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { getFirebaseDoc } from "../utils/getFirebaseDoc";
+import { getFirebaseCollection } from "../utils/getFirebaseCollection";
 
-export async function getUserById(userId) {
-  try {
-    const docRef = doc(db, "users", userId);
-    const docSnap = await getDoc(docRef);
-    const userData = docSnap.data();
-
-    if (docSnap.exists()) {
-      return userData;
-    } else {
-      throw { msg: "Usuario no encontrado" };
-    }
-  } catch (error) {
-    console.log("Error obteniendo el usuario::", error);
-  }
+export async function getPostWithComments(postId, callback) {
+  const postData = await getFirebaseDoc("posts", postId);
+  //trae los comentarios del post
+  const filter = { field: "postId", operator: "==", value: postId };
+  //esta parte envia dentro del callback de 'getFirebaseCollection' el callback asignado
+  // no se si es lo mejor, pero no se me ocurrio otra forma
+  await getFirebaseCollection(
+    (commentsColl) => {
+      const comments = [];
+      commentsColl.forEach((comment) => comments.push(comment));
+      //conforma el post completo y ejecuta elcallback
+      callback({ ...postData, comments: comments });
+    },
+    "comments",
+    filter
+  );
 }

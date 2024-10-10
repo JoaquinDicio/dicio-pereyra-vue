@@ -1,46 +1,26 @@
 <script>
-import { getUserById } from '../services/posts.js';
-import CommentItem from './CommentItem.vue'; // Importa el nuevo componente
-
 export default {
-    name: 'CommentsList',
-    components: { CommentItem }, // Registra el componente
+    name: "CommentsList",
     props: {
         comments: {
             type: Array,
-            required: true
-        }
+            required: true,
+            default: () => [],
+        },
     },
-    data() {
-        return {
-            commentsWithUsernames: []
-        };
-    },
-    methods: {
-        async fetchUsernames() {
-            const updatedComments = await Promise.all(
-                this.comments.map(async (comment) => {
-                    const user = await getUserById(comment.userId);
-                    return { ...comment, username: user.username, img: user.img, email: user.email };
-                })
-            );
-            this.commentsWithUsernames = updatedComments;
-        }
-    },
-    async mounted() {
-        await this.fetchUsernames();
-    }
 };
 </script>
 
 <template>
-    <div class="mt-5">
-        <h3 class="font-medium text-lg">Comentarios</h3>
-        <div v-if="commentsWithUsernames.length === 0" class="p-5">
-            <p>No hay comentarios todavía.</p>
-        </div>
-        <div v-for="(comment, index) in commentsWithUsernames" :key="index">
-            <CommentItem :comment="comment" />
-        </div>
-    </div>
+    <ul>
+        <li v-for="comment in comments" :key="comment.id" class="border-b-2 border-slate-800 px-5 py-4">
+            <div class="flex gap-3">
+                <img :src="comment.userImg" :alt="comment.username" class="rounded-full w-[45px] h-[45px]">
+                <div>
+                    <p class="font-bold">{{ comment.username }}</p>
+                    <p>{{ comment.text }}</p>
+                </div>
+            </div>
+        </li>
+    </ul>
 </template>

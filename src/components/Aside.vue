@@ -9,7 +9,6 @@ export default {
         }
     },
     mounted() {
-
         suscribeToAuth((userCredentials) => {
             const { email, id, img, username } = userCredentials
             this.user.email = email;
@@ -48,12 +47,15 @@ export default {
                 Postear +
             </button>
         </div>
-        <router-link :to="`/profile/${user.id}`" class="flex items-center gap-3">
+        <router-link v-if="user.id" :to="`/profile/${user.id}`" class="flex items-center gap-3">
             <img class="rounded-full w-[45px]" :src="user.img" alt="foto de perfil" />
             <div>
                 <p class="font-medium">{{ user.username }}</p>
                 <p class="font-ligther text-xs">@{{ user.email }}</p>
             </div>
         </router-link>
+        <div v-else>
+            <p>Cargando...</p>
+        </div>
     </aside>
 </template>
