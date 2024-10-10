@@ -1,8 +1,10 @@
 <script>
-import { getUserById } from '../utils/getPosts.js'; // Asegúrate de importar la función
+import { getUserById } from '../utils/getPosts.js';
+import CommentItem from './CommentItem.vue'; // Importa el nuevo componente
 
 export default {
     name: 'CommentsList',
+    components: { CommentItem }, // Registra el componente
     props: {
         comments: {
             type: Array,
@@ -19,13 +21,10 @@ export default {
             const updatedComments = await Promise.all(
                 this.comments.map(async (comment) => {
                     const user = await getUserById(comment.userId);
-                    return { ...comment, username: user.username };
+                    return { ...comment, username: user.username, img: user.img, email: user.email };
                 })
             );
             this.commentsWithUsernames = updatedComments;
-        },
-        formatDate(date) {
-            return new Date(date).toLocaleString();
         }
     },
     async mounted() {
@@ -40,8 +39,8 @@ export default {
         <div v-if="commentsWithUsernames.length === 0" class="p-5">
             <p>No hay comentarios todavía.</p>
         </div>
-        <div v-for="(comment, index) in commentsWithUsernames" :key="index" class="p-3 border-b border-slate-700">
-            <p><strong>{{ comment.username }}</strong>: {{ comment.text }}</p>
+        <div v-for="(comment, index) in commentsWithUsernames" :key="index">
+            <CommentItem :comment="comment" /> <!-- Uso del componente CommentItem -->
         </div>
     </div>
 </template>

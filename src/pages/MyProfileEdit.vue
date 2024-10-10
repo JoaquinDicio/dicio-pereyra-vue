@@ -78,7 +78,7 @@ export default {
                             <label for="Nombre" class=" my-3">Nombre:</label>
                             <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.username">
                             <label for="Email" class=" my-3">Email:</label>
-                            <input type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.email">
+                            <input disabled type="text" class="text-slate-950 p-2 rounded-lg" v-model="user.email">
                             <label for="Biography" class=" my-3">Biografia:</label>
                             <textarea rows="6" cols="50" class="text-slate-950 p-2 rounded-lg"
                                 v-model="user.biography"></textarea>

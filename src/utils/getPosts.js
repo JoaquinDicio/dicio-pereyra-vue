@@ -50,23 +50,22 @@ export async function getUserById(userId) {
   }
 }
 
-export async function getPostById(postId) {
-  try {
-    const postDocRef = doc(db, "posts", postId);
-    const postDoc = await getDoc(postDocRef);
-
+export function getPostById(postId, callback) {
+  const postDocRef = doc(db, "posts", postId);
+  console.log(postDocRef)
+  return onSnapshot(postDocRef, async (postDoc) => {
     if (postDoc.exists()) {
       const { text, userId, comments } = postDoc.data();
       const { username, img } = await getUserById(userId);
-      
-      return { text, userId, username, img, id: postDoc.id, comments: comments || [] };
+
+      callback({ text, userId, username, img, id: postDoc.id, comments: comments || [] });
     } else {
-      throw new Error("No se encontró el post con el ID especificado.");
+      console.error("No se encontró el post con el ID especificado.");
+      callback(null);
     }
-  } catch (error) {
+  }, (error) => {
     console.error("Error obteniendo el post:", error.message);
-    return null;
-  }
+  });
 }
 
 export async function addCommentToPost(postId, comment) {

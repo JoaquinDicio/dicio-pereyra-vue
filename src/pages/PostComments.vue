@@ -22,13 +22,11 @@ export default {
         async getPost() {
             const postId = this.$route.params.postid;
             this.loading = true;
-            try {
-                this.post = await getPostById(postId);
-            } catch (error) {
-                console.error("Error al obtener el post:", error.message);
-            } finally {
+
+            getPostById(postId, (post) => {
+                this.post = post;
                 this.loading = false;
-            }
+            });
         },
         async submitComment(commentText) {
             const postId = this.$route.params.postid;
@@ -80,7 +78,8 @@ export default {
 
                         <form @submit.prevent="submitComment(commentText)">
                             <textarea v-model="commentText" name="text" id="text" rows="3"
-                                class="p-5 bg-transparent w-full" placeholder="¡Escribe un comentario!"></textarea>
+                                class="p-5 bg-transparent w-full resize-none"
+                                placeholder="¡Escribe un comentario!"></textarea>
                             <div class="pb-2 flex items-center">
                                 <input type="submit"
                                     class="hover:bg-indigo-800 cursor-pointer transition w-full px-4 py-2 bg-indigo-900"
@@ -88,7 +87,7 @@ export default {
                             </div>
                         </form>
 
-                        <CommentsList :comments="post.comments" />
+                        <CommentsList :comments="this.post.comments" />
                     </div>
                 </div>
             </main>
