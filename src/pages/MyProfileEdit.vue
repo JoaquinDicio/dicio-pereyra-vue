@@ -19,27 +19,10 @@ export default {
     },
     methods: {
         async handleSubmit() {
-            if (this.editing) return;
-
             this.editing = true;
-
-            try {
-                const { username, email, biography, img } = this.user
-
-                await editProfile({
-                    username,
-                    email,
-                    biography,
-                    img
-                });
-
-            } catch (error) {
-                console.error(error);
-            } finally {
-                this.editing = false;
-            }
-        },
-
+            await editProfile(this.user)
+            this.editing = false
+        }
     }
     ,
     mounted() {
