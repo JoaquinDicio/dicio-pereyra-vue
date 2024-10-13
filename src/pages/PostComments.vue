@@ -44,6 +44,8 @@ export default {
             const { username, img, id } = userCredentials
             this.user = { username, img, id }
         })
+
+        
     }
 };
 </script>

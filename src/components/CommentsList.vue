@@ -17,7 +17,7 @@ export default {
             <div class="flex gap-3">
                 <img :src="comment.userImg" :alt="comment.username" class="rounded-full w-[45px] h-[45px]">
                 <div>
-                    <p class="font-bold">{{ comment.username }}</p>
+                    <router-link :to="`/profile/${comment.userId}`" class="font-bold">{{ comment.username }}</router-link>
                     <p>{{ comment.text }}</p>
                 </div>
             </div>
