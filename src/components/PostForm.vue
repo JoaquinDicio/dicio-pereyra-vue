@@ -17,7 +17,7 @@ export default {
 </script>
 <template>
     <form @submit.prevent="handleSubmit">
-        <textarea v-model="text" name="text" id="text" rows="3" class="p-5 bg-transparent w-full"
+        <textarea v-model="text" name="text" id="text" rows="3" class="p-5 bg-transparent w-full resize-none"
             placeholder="¡¿Qué está pasando?!"></textarea>
         <div class="pb-2 flex items-center">
             <input type="submit" class=" hover:bg-indigo-800 cursor-pointer transition  w-full px-4 py-2 bg-indigo-900"
