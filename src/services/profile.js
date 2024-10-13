@@ -56,7 +56,7 @@ export async function editProfile(user) {
       const commentRef = doc(db, "comments", docSnapshot.id);
       await updateDoc(commentRef, {
         username: user.username,
-        img: user.img,
+        userImg: user.img,
       });
     });
 
@@ -69,7 +69,7 @@ export async function editProfile(user) {
       const postRef = doc(db, "posts", docSnapshot.id);
       await updateDoc(postRef, {
         username: user.username,
-        img: user.img,
+        userImg: user.img,
       });
     });
 
