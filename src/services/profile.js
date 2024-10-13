@@ -1,4 +1,3 @@
-import { updateProfile, updateEmail } from "firebase/auth";
 import {
   doc,
   updateDoc,

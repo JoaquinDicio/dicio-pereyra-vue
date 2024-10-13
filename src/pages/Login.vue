@@ -11,7 +11,6 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      // TODO => validar para no hacer solicitudes al pedo estaria bueno
       try {
         const response = await login(this.credentials)
         if (response.user.uid) {

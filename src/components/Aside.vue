@@ -1,4 +1,5 @@
 <script>
+import Home from '../pages/Home.vue';
 import { suscribeToAuth } from '../services/auth';
 
 export default {
@@ -27,19 +28,19 @@ export default {
                 <h1 class="font-bold text-2xl mb-10">NotTwitter</h1>
                 <ul class="space-y-4 mb-12">
                     <li>
-                        <a href="#" class="block  hover:font-medium transition">Inicio</a>
+                        <router-link :to="`/home`" class="block  hover:font-medium transition">Inicio</router-link>
                     </li>
                     <li>
-                        <a href="#" class="block  hover:font-medium transition">Explorar</a>
+                        <router-link :to="`/home`" class="block  hover:font-medium transition">Explorar</router-link>
+                    </li>    
+                    <li>
+                        <router-link :to="`/home`" class="block  hover:font-medium transition">Notificaciones</router-link>
                     </li>
                     <li>
-                        <a href="#" class="block  hover:font-medium transition">Notificaciones</a>
+                        <router-link :to="`/profile/${user.id}`" class="block  hover:font-medium transition">Mensajes</router-link>
                     </li>
                     <li>
-                        <a href="#" class="block  hover:font-medium transition">Mensajes</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block  hover:font-medium transition">Guardados</a>
+                        <router-link :to="`/profile/${user.id}`" class="block  hover:font-medium transition">Guardados</router-link>
                     </li>
                 </ul>
             </nav>
