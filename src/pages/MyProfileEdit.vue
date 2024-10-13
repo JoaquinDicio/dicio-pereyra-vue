@@ -42,7 +42,7 @@ export default {
     <section class="bg-[var(--bg-color)]">
         <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
 
-            <Aside class="px-10 py-5 border-r-slate-800"></Aside>
+            <Aside class="md:px-10 py-5 border-r-slate-800"></Aside>
 
             <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>

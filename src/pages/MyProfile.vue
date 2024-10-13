@@ -40,12 +40,12 @@ export default {
     <section class="bg-[var(--bg-color)]">
         <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
 
-            <Aside class="px-10 py-5 border-r-slate-800"></Aside>
+            <Aside class="md:px-10 py-5 border-r-slate-800"></Aside>
 
-            <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
+            <main class="md:w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>
                     <SectionHeader :sectionName="'Perfil'" />
-                    <div class="flex flex-col items-start mb-8 px-10 py-10">
+                    <div class="flex flex-col items-start mb-8 md:px-10 py-10">
                         <div class=" rounded-md bg-red-300">
                             <img class="rounded-md w-full"
                                 src="https://blogthinkbig.com/wp-content/uploads/sites/4/2018/07/V%C3%ADa-L%C3%A1ctea-portada-espacio-universo.jpg?fit=2296%2C818"

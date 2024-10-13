@@ -44,7 +44,7 @@ export default {
   <section class="bg-[var(--bg-color)]">
     <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
       <Aside class="border-r-slate-800"></Aside>
-      <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
+      <main class="md:w-3/4 w-full max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
         <SectionHeader :sectionName="'Home'" />
         <div>
           <div class="p-5">

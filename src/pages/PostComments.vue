@@ -45,7 +45,7 @@ export default {
             this.user = { username, img, id }
         })
 
-        
+
     }
 };
 </script>
@@ -53,8 +53,8 @@ export default {
 <template>
     <section class="bg-[var(--bg-color)]">
         <div class="flex min-h-screen flex-1 mx-auto max-w-[1200px]">
-            <Aside class="px-10 py-5 border-r-slate-800"></Aside>
-            <main class="w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
+            <Aside class="md:px-10 py-5 border-r-slate-800"></Aside>
+            <main class="md:w-3/4 max-h-screen overflow-y-scroll text-white border-r-slate-800 border-r-2">
                 <div>
                     <SectionHeader :sectionName="'Comentarios'" />
 
