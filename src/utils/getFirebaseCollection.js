@@ -25,6 +25,7 @@ export async function getFirebaseCollection(callback, collectionName, filter) {
         id: doc.id,
         ...doc.data(),
       }));
+      console.log(queryResults)
       callback(queryResults);
     });
   } catch (e) {
